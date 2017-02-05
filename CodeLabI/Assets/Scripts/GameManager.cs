@@ -15,28 +15,31 @@ using System.Collections.Generic;
 /*--------------------------------------------------------------------------------------*/
 public class GameManager : MonoBehaviour 
 {
-	public static GameManager gm;
+    //  Public Static Variables
+	public static GameManager gm;                //    Static referecne to GameManager
 
 	//	Public Variable
-	public float spawnDelay = 0.25f;
-	public Transform spawnPoint0;
-	public Transform spawnPoint45;
-	public Transform spawnPoint90;
-	public Transform spawnPoint180;
-	public Transform spawnPoint225;
-	public Transform spawnPoint270;
-	public Material activeMaterial;
-	public Material inactiveMaterial;
-	public ButtonControlScript rButton;
-	public ButtonControlScript tButton;
-	public ButtonControlScript yButton;
-	public LaneControl degree0;
-	public LaneControl degree45;
-	public LaneControl degree90;
-	public LaneControl degree180;
-	public LaneControl degree225;
-	public LaneControl degree270;
-	public List<EnemyContoller> enemyList;
+	public float spawnDelay = 0.25f;             //    Spawn Delay for enemy's. Set to 1 in Inspector
+
+    public int score = 0;                        //    Player's score
+	public Transform spawnPoint0;                //    Referecne to the 0 Lane's SpawnPoint
+	public Transform spawnPoint45;               //    Reference to the 45 Lane's SpawnPoint
+	public Transform spawnPoint90;               //    Reference to the 90 Lane's SpawnPoint
+	public Transform spawnPoint180;              //    Reference to the 180 Lane's SpawnPoint
+	public Transform spawnPoint225;              //    Reference to the 225 Lane's SpawnPoint
+	public Transform spawnPoint270;              //    Reference to the 270 Lane's SpawnPoint
+	public Material activeMaterial;              //    Reference to the active material for the RTY buttons
+	public Material inactiveMaterial;            //    Reference to the inactive material for the RTY buttons
+	public ButtonControlScript rButton;          //    Reference to the R button's control script
+	public ButtonControlScript tButton;          //    Reference to the T button's control script
+    public ButtonControlScript yButton;          //    Reference to the Y button's control script
+    public LaneControl degree0;                  //    Reference to the LaneControl Script of 0 Lane
+	public LaneControl degree45;                 //    Reference to the LaneControl Script of 45 Lane
+	public LaneControl degree90;                 //    Reference to the LaneControl Script of 90 Lane
+	public LaneControl degree180;                //    Reference to the LaneControl Script of 180 Lane
+	public LaneControl degree225;                //    Reference to the LaneControl Script of 225 Lane
+    public LaneControl degree270;                //    Reference to the LaneControl Script of 270 Lane
+    public List<EnemyContoller> enemyList;       //    List of all active enemies
 
 	/*--------------------------------------------------------------------------------------*/
 	/*																						*/
@@ -56,7 +59,12 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	void DeactivateButtons()
+    /*--------------------------------------------------------------------------------------*/
+    /*																						*/
+    /*	DeactivateButtons: Sests the button materails to inactive                			*/
+    /*																						*/
+    /*--------------------------------------------------------------------------------------*/
+    void DeactivateButtons()
 	{
 		degree0.GetComponent<MeshRenderer> ().material = inactiveMaterial;
 		degree45.GetComponent<MeshRenderer> ().material = inactiveMaterial;
@@ -68,7 +76,7 @@ public class GameManager : MonoBehaviour
 
 	/*--------------------------------------------------------------------------------------*/
 	/*																						*/
-	/*	RespawnPlayer: Creates a new instance of the player prefab							*/
+	/*	SpawnEnemy: Creates a new instance of the enemy prefab every spawnDelay seconds		*/
 	/*																						*/
 	/*--------------------------------------------------------------------------------------*/
 	public IEnumerator SpawnEnemy()
@@ -83,7 +91,15 @@ public class GameManager : MonoBehaviour
 	
 	}
 
-	Transform SetSpawnPoint(int id)
+    /*--------------------------------------------------------------------------------------*/
+    /*																						*/
+    /*	SetSpawnPoint: Sets spawn point for recently created enemy                    		*/
+    /*			params: int id - Determines which lane the enemy goes in					*/
+    /*																						*/
+    /*			returns: 1 of 6 set spawn points											*/
+    /*																						*/
+    /*--------------------------------------------------------------------------------------*/
+    Transform SetSpawnPoint(int id)
 	{
 		if (id == 0)
 		{
@@ -113,7 +129,14 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	void SetEnemyLane(GameObject enemy, int id)
+    /*--------------------------------------------------------------------------------------*/
+    /*																						*/
+    /*	SetEnemyLane: Tags enemy                                                       		*/
+    /*			params: GameObject enemy - the enemy being tagged        					*/
+    /*					int id - Determines which lane the enemy goes in					*/
+    /*																						*/
+    /*--------------------------------------------------------------------------------------*/
+    void SetEnemyLane(GameObject enemy, int id)
 	{
 		if (id == 0)
 		{
@@ -143,7 +166,15 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	void ButtonStatus(bool r, bool t, bool y)
+    /*--------------------------------------------------------------------------------------*/
+    /*																						*/
+    /*	ButtonStatus: Destroys enemy on appropriate lanes. Increases score.           		*/
+    /*			params: bool r - True if R is pressed.                   					*/
+    /*					bool t - True if T is Pressed.                    					*/
+    /*					bool y - True if Y is Pressed.                    					*/
+    /*																						*/
+    /*--------------------------------------------------------------------------------------*/
+    void ButtonStatus(bool r, bool t, bool y)
 	{
 		DeactivateButtons ();
 
@@ -152,81 +183,32 @@ public class GameManager : MonoBehaviour
 			if (!r && t && y) 
 			{
 				//	0 Degree
-				degree0.GetComponent<MeshRenderer> ().material = activeMaterial;
-				foreach (EnemyContoller enemy in enemyList) 
-				{
-					if (enemy.tag == "Enemy0") 
-					{
-						enemyList.Remove (enemy);
-						Destroy (enemy.gameObject);
-					}
-				}
-
+				UpdateScore (0);
 			} 
 			else if (r && t && !y) 
 			{
 				//	45 Degree
-				degree45.GetComponent<MeshRenderer> ().material = activeMaterial;
-				foreach (EnemyContoller enemy in enemyList) 
-				{
-					if (enemy.tag == "Enemy45") 
-					{
-						enemyList.Remove (enemy);
-						Destroy (enemy.gameObject);
-					}
-				}
+				UpdateScore (1);
 			} 
 			else if (!r && t && !y) 
 			{
 				//	90 Degree
-				degree90.GetComponent<MeshRenderer> ().material = activeMaterial;
-				foreach (EnemyContoller enemy in enemyList) 
-				{
-					if (enemy.tag == "Enemy90") 
-					{
-						enemyList.Remove (enemy);
-						Destroy (enemy.gameObject);
-					}
-				}
+		        UpdateScore (2);
 			} 
 			else if (r && !t && !y) 
 			{
 				//	180 Degree
-				degree180.GetComponent<MeshRenderer> ().material = activeMaterial;
-				foreach (EnemyContoller enemy in enemyList) 
-				{
-					if (enemy.tag == "Enemy180") 
-					{
-						enemyList.Remove (enemy);
-						Destroy (enemy.gameObject);
-					}
-				}
+				UpdateScore (3);
 			} 
 			else if (!r && !t && y)
 			{
 				//	225 Degree
-				degree225.GetComponent<MeshRenderer> ().material = activeMaterial;
-				foreach (EnemyContoller enemy in enemyList) 
-				{
-					if (enemy.tag == "Enemy225") 
-					{
-						enemyList.Remove (enemy);
-						Destroy (enemy.gameObject);
-					}
-				}
+				UpdateScore (4);
 			} 
 			else if (r && !t && y) 
 			{
 				//	270 Degree
-				degree270.GetComponent<MeshRenderer> ().material = activeMaterial;
-				foreach (EnemyContoller enemy in enemyList) 
-				{
-					if (enemy.tag == "Enemy270") 
-					{
-						enemyList.Remove (enemy);
-						Destroy (enemy.gameObject);
-					}
-				}
+				UpdateScore (5);
 			}
 		}
 		else if (r & t & y)
@@ -234,8 +216,101 @@ public class GameManager : MonoBehaviour
 			SceneManager.LoadScene ("Week1", LoadSceneMode.Single);
 		}
 	}
+
+    /*--------------------------------------------------------------------------------------*/
+    /*																						*/
+    /*	SetSpawnPoint: Sets spawn point for recently created enemy                    		*/
+    /*			params: int id - Determines which lane the enemy goes in					*/
+    /*																						*/
+    /*			returns: 1 of 6 set spawn points											*/
+    /*																						*/
+    /*--------------------------------------------------------------------------------------*/
+    void UpdateScore(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                degree0.GetComponent <MeshRenderer> ().material = activeMaterial;
+                foreach (EnemyContoller enemy in enemyList)
+                {
+                    if (enemy.tag == "Enemy0")
+                    {
+                        score++;
+                        enemyList.Remove (enemy);
+                        Destroy (enemy.gameObject);
+                    }
+                }
+                break;
+            case 1:
+                degree45.GetComponent <MeshRenderer> ().material = activeMaterial;
+                foreach (EnemyContoller enemy in enemyList)
+                {
+                    if (enemy.tag == "Enemy45")
+                    {
+                        score++;
+                        enemyList.Remove (enemy);
+                        Destroy (enemy.gameObject);
+                    }
+                }
+                break;
+
+            case 2:
+                degree90.GetComponent <MeshRenderer> ().material = activeMaterial;
+                foreach (EnemyContoller enemy in enemyList)
+                {
+                    if (enemy.tag == "Enemy90")
+                    {
+                        score++;
+                        enemyList.Remove (enemy);
+                        Destroy (enemy.gameObject);
+                    }
+                }
+                break;
+
+            case 3:
+                degree180.GetComponent <MeshRenderer> ().material = activeMaterial;
+                foreach (EnemyContoller enemy in enemyList)
+                {
+                    if (enemy.tag == "Enemy180")
+                    {
+                        score++;
+                        enemyList.Remove (enemy);
+                        Destroy (enemy.gameObject);
+                    }
+                }
+                break;
+            case 4:
+                degree225.GetComponent <MeshRenderer> ().material = activeMaterial;
+                foreach (EnemyContoller enemy in enemyList)
+                {
+                    if (enemy.tag == "Enemy225")
+                    {
+                        score++;
+                        enemyList.Remove (enemy);
+                        Destroy (enemy.gameObject);
+                    }
+                }
+                break;
+
+            case 5:
+                degree270.GetComponent <MeshRenderer> ().material = activeMaterial;
+                foreach (EnemyContoller enemy in enemyList)
+                {
+                    if (enemy.tag == "Enemy270")
+                    {
+                        score++;
+                        enemyList.Remove (enemy);
+                        Destroy (enemy.gameObject);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+    }
 	
-	//*--------------------------------------------------------------------------------------*/
+    /*--------------------------------------------------------------------------------------*/
 	/*																						*/
 	/*	Update: Called once per frame														*/
 	/*																						*/

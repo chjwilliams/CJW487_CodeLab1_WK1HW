@@ -1,15 +1,15 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class LaneControl : MonoBehaviour {
+/*--------------------------------------------------------------------------------------*/
+/*																						*/
+/*	LaneControl: Used asa  quick referecen to the Lane    								*/
+/*			Functions:																	*/
+/*																						*/
+/*--------------------------------------------------------------------------------------*/
+public class LaneControl : MonoBehaviour
+{
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 }

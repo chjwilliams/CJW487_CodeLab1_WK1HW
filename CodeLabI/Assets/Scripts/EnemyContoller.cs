@@ -3,19 +3,28 @@ using System.Collections;
 
 public class EnemyContoller : MonoBehaviour {
 
-	public float moveSpeed = 4.0f;
-	public float slopeOfLane = 0.5f;
-	public HomeBase homebase;
+	public float moveSpeed = 4.0f;            //    Eney's movement speed
+	public float slopeOfLane = 0.5f;          //    Slope of lane to enemy travels along the line
+	public HomeBase homebase;                 //    Reference to Enemy's target
 
-	// Use this for initialization
-	void Start () 
+    /*--------------------------------------------------------------------------------------*/
+    /*																						*/
+    /*	Start: Runs once at the begining of the game initalizes variables.					*/
+    /*																						*/
+    /*--------------------------------------------------------------------------------------*/
+    void Start ()
 	{
 		homebase = GameObject.Find ("Home").GetComponent<HomeBase>();
 	}
 
 
-
-	void Move(string enemytag)
+    /*--------------------------------------------------------------------------------------*/
+    /*																						*/
+    /*	Move: Moves enemy according to tag                                					*/
+    /*		param: string enemytag - gameobject's tag										*/
+    /*																						*/
+    /*--------------------------------------------------------------------------------------*/
+    void Move(string enemytag)
 	{
 		if (enemytag == "Enemy0")
 		{
@@ -54,17 +63,21 @@ public class EnemyContoller : MonoBehaviour {
 											transform.position.z + slopeOfLane * moveSpeed * Time.deltaTime);
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () 
+
+    /*--------------------------------------------------------------------------------------*/
+    /*																						*/
+    /*	Update: Called once per frame														*/
+    /*																						*/
+    /*--------------------------------------------------------------------------------------*/
+    void Update ()
 	{
 		Move (tag);
 
 		if(Vector3.Distance(transform.position, homebase.transform.position) < homebase.radius)
 		{
-			homebase.SendMessage ("Damage");
-			Destroy(gameObject);
-			Debug.Log ("done");
+		    homebase.SendMessage ("Damage");
+
+		    Destroy (gameObject);
 		}
 	}
 }

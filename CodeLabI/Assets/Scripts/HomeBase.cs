@@ -2,27 +2,28 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 
+/*--------------------------------------------------------------------------------------*/
+/*																						*/
+/*	HomeBase: manages state of homebase                            						*/
+/*																						*/
+/*		Functions:																		*/
+/*			void Damage ()																*/
+/*																						*/
+/*--------------------------------------------------------------------------------------*/
 public class HomeBase : MonoBehaviour
 {
-	public float radius = 2.18204f;
-	public float moveSpeed = 5.0f;
-	public float health = 10.0f;
-	public float duration = 5.0f;
-	public Color startColor;
-	public Color endColor;
+	public float radius = 2.18204f;            //    Radius of homebase
+	public float moveSpeed = 5.0f;             //    How fast home base move down
+	public float health = 10.0f;               //    Amount of health points
 
-	private Color color;
-	private float t;
-	// Use this for initialization
-	void Start () 
+    /*--------------------------------------------------------------------------------------*/
+    /*																						*/
+    /*	Damage: Takes one health point away from home base.                                 */
+    /*            Starts game over when helath is 0                				        	*/
+    /*																						*/
+    /*--------------------------------------------------------------------------------------*/
+    void Damage()
 	{
-		color = GetComponent<MeshRenderer> ().material.color;
-	}
-
-	void Damage()
-	{
-		
-
 		if (health < 1)
 		{
 			health = 0;
@@ -33,6 +34,5 @@ public class HomeBase : MonoBehaviour
 			health--;
 			transform.Translate (Vector3.down * moveSpeed * Time.deltaTime);
 		}
-
 	}
 }
